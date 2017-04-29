@@ -10,6 +10,7 @@ const path = require('path')
 const logger = require('morgan')
 const Debug = require('debug')
 const debug = Debug('starter')
+const crud = require('./api/controllers/crud')
 
 module.exports = (api, env) => {
   debug('init', api, env)
@@ -53,13 +54,14 @@ module.exports = (api, env) => {
   Object.keys(api.controllers).forEach(ctrlName => {
     let controller = api.controllers[ctrlName]
     let router = new express.Router()
-    // If controller._config.actions merge with blueprints
-    // If config.routes has custom routes, bind them
     router.get('/', createController(ctrlName, controller.list || crud.list))
     router.get('/:id', createController(ctrlName, controller.show || crud.show))
     router.post('/', createController(ctrlName, controller.create || crud.create))
     router.put('/:id', createController(ctrlName, controller.update || crud.update))
     router.delete('/:id', createController(ctrlName, controller.delete || crud.delete))
+    _.omit(Object.keys(controller), ['list','show','create','update','delete'], ctrlActionName => {
+      router.all('/' + ctrlActionName, createController(ctrlName, controller[ctrlActionName]))
+    })
     app.use('/' + ctrlName, router)
   })
 

@@ -6,10 +6,10 @@ module.exports = {
   },
 
   show(ctx) {
-
+    ctx.res.status(200).send('world')
   },
 
   mine(ctx) {
-
+    ctx.res.status(200).send('mine')
   }
 }

@@ -17,6 +17,7 @@
     "debug": "^2.6.6",
     "express": "^4.15.2",
     "helmet": "^3.5.0",
+    "lodash": "^4.17.4",
     "method-override": "^2.3.8",
     "morgan": "^1.8.1",
     "nodemon": "^1.11.0"
