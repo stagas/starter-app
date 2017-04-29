@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const express = require('express')
 const compression = require('compression')
 const bodyParser = require('body-parser')
@@ -11,76 +12,66 @@ const Debug = require('debug')
 const debug = Debug('starter')
 
 module.exports = (api, env) => {
-  debug('init')
+  debug('init', api, env)
 
   let port = env.port || 3000
   let host = env.host || '0.0.0.0'
   let app = express()
 
+  app.debug = (namespace) => {
+    return Debug(`${env.name}:${namespace}`)
+  }
+
   app.use(logger(env.logger && env.logger.format || 'dev'))
+
+  let createController = (name, verb, action) => {
+    return (req, res) => {
+      let ctx = {
+        name: name,
+        debug: app.debug('controller:' + name),
+        req,
+        res
+      }
+      ctx.debug(verb)
+      action(ctx)
+    }
+  }
+
+  app.use(cors())
+  app.use(helmet())
+
+  app.use(bodyParser.urlencoded({
+    extended: false
+  }))
+  app.use(bodyParser.json())
+  app.use(methodOverride())
+  app.use(compression())
+
+  app.set('json spaces', 2)
+
+  Object.keys(api.controllers).forEach(key => {
+    debug('controller', key)
+    let controller = api.controllers[key]
+    let router = new express.Router()
+    router.get('/', createController(key, 'list', controller.list))
+    router.get('/:id', createController(key, 'show', controller.show))
+    router.post('/', createController(key, 'create', controller.create))
+    router.put('/:id', createController(key, 'update', controller.update))
+    router.delete('/:id', createController(key, 'delete', controller.delete))
+    app.use('/' + key, router)
+  })
+
   app.use(express.static(path.join(env.root || '.', env.staticPath || 'public')))
-  app.use(api)
 
   let server = http.createServer(app)
 
-  return {
-    server,
-    debug(namespace) {
-      return Debug(`${env.name}:${namespace}`)
-    },
-    run(port) {
-      debug('run', port)
-      this.server.listen(port, host, () => {
-        debug('listening', server.address())
-      })
+  app.server = server
 
-    }
+  app.run = function(port) {
+    debug('run', port)
+    this.server.listen(port, host, () => {
+      debug('listening', server.address())
+    })
   }
+  return app
 }
-
-
-// const config = require('./config')
-//
-//
-// api.disable('x-powered-by')
-//
-// api.set('port', process.env.PORT || 3001)
-//
-// api.use(cors())
-// api.use(helmet())
-//
-// api.use(bodyParser.urlencoded({
-//   extended: false
-// }))
-// api.use(bodyParser.json())
-// api.use(methodOverride())
-// api.use(compression())
-//
-// api.set('json spaces', 2)
-//
-// require('./http')(api, core)
-//
-// api.use(function (err, req, res, next) {
-//   if (err && err.name === 'UnauthorizedError') {
-//     core.log.info('Unauthorized Error', err)
-//     return res.sendStatus(401)
-//   } else if (err) {
-//     core.log.error('Middleware Error', err.toString())
-//     return res.sendStatus(500)
-//   }
-// })
-//
-// if (require.main === module) {
-//   http.createServer(api)
-//     .listen(api.get('port'), function () {
-//       core.log.info('Signing Service API listening on port ' + this.address()
-//           .port)
-//       core.log.debug(JSON.stringify(core.config, null, 2))
-//     })
-// }
-//
-// // api.quit = function () {
-// //   return core.quit()
-// // }
-//
-// module.exports = api
