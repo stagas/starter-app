@@ -24,7 +24,8 @@ module.exports = (api, env) => {
 
   app.use(logger(env.logger && env.logger.format || 'dev'))
 
-  let createController = (name, verb, action) => {
+  let createController = (name, action) => {
+    // debug(`Controller ${name} action ${action.name}`)
     return (req, res) => {
       let ctx = {
         name: name,
@@ -32,7 +33,7 @@ module.exports = (api, env) => {
         req,
         res
       }
-      ctx.debug(verb)
+      ctx.debug(action.name)
       action(ctx)
     }
   }
@@ -49,16 +50,17 @@ module.exports = (api, env) => {
 
   app.set('json spaces', 2)
 
-  Object.keys(api.controllers).forEach(key => {
-    debug('controller', key)
-    let controller = api.controllers[key]
+  Object.keys(api.controllers).forEach(ctrlName => {
+    let controller = api.controllers[ctrlName]
     let router = new express.Router()
-    router.get('/', createController(key, 'list', controller.list))
-    router.get('/:id', createController(key, 'show', controller.show))
-    router.post('/', createController(key, 'create', controller.create))
-    router.put('/:id', createController(key, 'update', controller.update))
-    router.delete('/:id', createController(key, 'delete', controller.delete))
-    app.use('/' + key, router)
+    // If controller._config.actions merge with blueprints
+    // If config.routes has custom routes, bind them
+    router.get('/', createController(ctrlName, controller.list))
+    router.get('/:id', createController(ctrlName, controller.show))
+    router.post('/', createController(ctrlName, controller.create))
+    router.put('/:id', createController(ctrlName, controller.update))
+    router.delete('/:id', createController(ctrlName, controller.delete))
+    app.use('/' + ctrlName, router)
   })
 
   app.use(express.static(path.join(env.root || '.', env.staticPath || 'public')))
