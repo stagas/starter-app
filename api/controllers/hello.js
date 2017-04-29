@@ -9,7 +9,11 @@ module.exports = {
     ctx.res.status(200).send('world')
   },
 
-  mine(ctx) {
-    ctx.res.status(200).send('mine')
+  create(ctx) {
+    ctx.res.status(200).send('hello 2')
+  },
+
+  foo(ctx) {
+    ctx.res.status(200).send('hello 1')
   }
 }

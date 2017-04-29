@@ -12,6 +12,8 @@ const Debug = require('debug')
 const debug = Debug('starter')
 const crud = require('./api/controllers/crud')
 
+const routes = require('./config/routes')
+
 module.exports = (api, env) => {
   debug('init', api, env)
 
@@ -51,6 +53,16 @@ module.exports = (api, env) => {
 
   app.set('json spaces', 2)
 
+  console.log('ROUTES', routes)
+  let router = new express.Router()
+  Object.keys(routes).forEach(route => {
+    let [ action, path ] = route.split(' ')
+    let [ ctrlName, actionName ] = routes[route].split('.')
+    let controller = api.controllers[ctrlName]
+    router[action.toLowerCase()](path, createController(ctrlName, controller[actionName]))
+  })
+  app.use(router)
+
   Object.keys(api.controllers).forEach(ctrlName => {
     let controller = api.controllers[ctrlName]
     let router = new express.Router()
@@ -59,9 +71,9 @@ module.exports = (api, env) => {
     router.post('/', createController(ctrlName, controller.create || crud.create))
     router.put('/:id', createController(ctrlName, controller.update || crud.update))
     router.delete('/:id', createController(ctrlName, controller.delete || crud.delete))
-    _.omit(Object.keys(controller), ['list','show','create','update','delete'], ctrlActionName => {
-      router.all('/' + ctrlActionName, createController(ctrlName, controller[ctrlActionName]))
-    })
+    // _.omit(Object.keys(controller), ['list','show','create','update','delete'], ctrlActionName => {
+    //   router.all('/' + ctrlActionName, createController(ctrlName, controller[ctrlActionName]))
+    // })
     app.use('/' + ctrlName, router)
   })
 
