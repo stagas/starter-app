@@ -55,11 +55,11 @@ module.exports = (api, env) => {
     let router = new express.Router()
     // If controller._config.actions merge with blueprints
     // If config.routes has custom routes, bind them
-    router.get('/', createController(ctrlName, controller.list))
-    router.get('/:id', createController(ctrlName, controller.show))
-    router.post('/', createController(ctrlName, controller.create))
-    router.put('/:id', createController(ctrlName, controller.update))
-    router.delete('/:id', createController(ctrlName, controller.delete))
+    router.get('/', createController(ctrlName, controller.list || crud.list))
+    router.get('/:id', createController(ctrlName, controller.show || crud.show))
+    router.post('/', createController(ctrlName, controller.create || crud.create))
+    router.put('/:id', createController(ctrlName, controller.update || crud.update))
+    router.delete('/:id', createController(ctrlName, controller.delete || crud.delete))
     app.use('/' + ctrlName, router)
   })
 
