@@ -5,5 +5,8 @@ export default {
   bootstrap: require('../bootstrap'),
   controllers: require('../controllers'),
   policies: require('../policies'),
-  routes: require('../routes')
+  routes: require('../routes'),
+  db: {
+    dialect: 'sqlite'
+  }
 }
