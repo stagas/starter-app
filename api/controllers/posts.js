@@ -12,6 +12,7 @@ export default {
 
   async create(ctx) {
     ctx.body = await ctx.db.models.post.create({
+      authorId: 1,
       title: 'hello',
       body: 'world'
     })

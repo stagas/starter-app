@@ -6,6 +6,7 @@ import logger from 'koa-logger'
 import helmet from 'koa-helmet'
 import bodyParser from 'koa-bodyparser'
 import Router from 'koa-router'
+import { singular } from 'pluralize'
 // const compression = require('compression')
 // const methodOverride = require('method-override')
 
@@ -26,7 +27,7 @@ export default env => {
     debug('create controller : %s.%s', name, action.name)
     return async (ctx, next) => {
       ctx.debug = app.debug(`controller:${name}`)
-      ctx.debug(name, action.name)
+      ctx.debug(action.name, name)
       await action(ctx)
     }
   }
@@ -43,6 +44,12 @@ export default env => {
 
   app.router.param('resource', (resource, ctx, next) => {
     ctx.resource = resource
+    ctx.modelName = singular(resource)
+    return next()
+  })
+
+  app.router.param('id', (id, ctx, next) => {
+    ctx.id = id
     return next()
   })
 

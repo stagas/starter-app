@@ -1,22 +1,29 @@
 
 export default {
   list(ctx) {
-    ctx.status = 501
+    return ctx.db.models[ctx.modelName].all()
   },
 
   show(ctx) {
-    ctx.status = 501
+    return ctx.db.models[ctx.modelName].findById(ctx.id)
   },
 
-  create(ctx) {
-    ctx.status = 501
+  async create(ctx) {
+    ctx.debug('body', ctx.req.body)
+    let model = await ctx.db.models[ctx.modelName].create(ctx.req.body)
+    ctx.body = model
   },
 
-  update(ctx) {
-    ctx.status = 501
+  async update(ctx) {
+    ctx.debug('body', ctx.req.body)
+    let model = await ctx.db.models[ctx.modelName].findById(ctx.id)
+    if (model == null) return
+    Object.assign(model, ctx.req.body)
+    await model.save()
+    ctx.body = model
   },
 
   delete(ctx) {
-    ctx.status = 501
+    return ctx.db.models[ctx.modelName].delete(ctx.id)
   }
 }
