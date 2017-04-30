@@ -11,7 +11,6 @@ export default {
   },
 
   async create(ctx) {
-    ctx.debug(ctx.db)
     ctx.body = await ctx.db.models.post.create({
       title: 'hello',
       body: 'world'
