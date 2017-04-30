@@ -1,29 +1,22 @@
 
 export default {
   list(ctx) {
-    return ctx.db.models[ctx.modelName].all()
+    return ctx.services.crud.list(ctx.modelName)
   },
 
   show(ctx) {
-    return ctx.db.models[ctx.modelName].findById(ctx.id)
+    ctx.body = ctx.services.crud.show(ctx.modelName, ctx.id)
   },
 
   async create(ctx) {
-    ctx.debug('body', ctx.req.body)
-    let model = await ctx.db.models[ctx.modelName].create(ctx.req.body)
-    ctx.body = model
+    ctx.body = await ctx.services.crud.create(ctx.modelName, ctx.req.body)
   },
 
   async update(ctx) {
-    ctx.debug('body', ctx.req.body)
-    let model = await ctx.db.models[ctx.modelName].findById(ctx.id)
-    if (model == null) return
-    Object.assign(model, ctx.req.body)
-    await model.save()
-    ctx.body = model
+    ctx.body = await ctx.services.crud.update(ctx.modelName, ctx.id, ctx.req.body)
   },
 
   delete(ctx) {
-    return ctx.db.models[ctx.modelName].delete(ctx.id)
+    return ctx.services.crud.delete(ctx.modelName, ctx.id)
   }
 }
