@@ -1,93 +1,83 @@
-const _ = require('lodash')
-const express = require('express')
-const compression = require('compression')
-const bodyParser = require('body-parser')
-const methodOverride = require('method-override')
-const http = require('http')
-const helmet = require('helmet')
-const cors = require('cors')
-const path = require('path')
-const logger = require('morgan')
-const Debug = require('debug')
+import Debug from 'debug'
+import http from 'http'
+import Koa from 'koa'
+import cors from 'kcors'
+import logger from 'koa-logger'
+import helmet from 'koa-helmet'
+import bodyParser from 'koa-bodyparser'
+import Router from 'koa-router'
+// const compression = require('compression')
+// const methodOverride = require('method-override')
+
 const debug = Debug('starter')
-const crud = require('./api/controllers/crud')
 
-const routes = require('./config/routes')
+export default env => {
+  debug('init', env)
 
-module.exports = (api, env) => {
-  debug('init', api, env)
+  let app = new Koa()
 
-  let port = env.port || 3000
-  let host = env.host || '0.0.0.0'
-  let app = express()
+  app.router = new Router()
 
   app.debug = (namespace) => {
     return Debug(`${env.name}:${namespace}`)
   }
 
-  app.use(logger(env.logger && env.logger.format || 'dev'))
-
-  let createController = (name, action) => {
-    // debug(`Controller ${name} action ${action.name}`)
-    return (req, res) => {
-      let ctx = {
-        name: name,
-        debug: app.debug('controller:' + name),
-        req,
-        res
-      }
-      ctx.debug(action.name)
-      action(ctx)
+  app.controller = (name, action) => {
+    debug('create controller : %s.%s', name, action.name)
+    return async (ctx, next) => {
+      ctx.debug = app.debug(`controller:${name}`)
+      ctx.debug(name, action.name)
+      await action(ctx)
     }
   }
 
+  app.use(logger(env.logger || 'dev'))
   app.use(cors())
   app.use(helmet())
+  app.use(bodyParser())
 
-  app.use(bodyParser.urlencoded({
-    extended: false
-  }))
-  app.use(bodyParser.json())
-  app.use(methodOverride())
-  app.use(compression())
-
-  app.set('json spaces', 2)
-
-  console.log('ROUTES', routes)
-  let router = new express.Router()
-  Object.keys(routes).forEach(route => {
-    let [ action, path ] = route.split(' ')
-    let [ ctrlName, actionName ] = routes[route].split('.')
-    let controller = api.controllers[ctrlName]
-    router[action.toLowerCase()](path, createController(ctrlName, controller[actionName]))
-  })
-  app.use(router)
-
-  Object.keys(api.controllers).forEach(ctrlName => {
-    let controller = api.controllers[ctrlName]
-    let router = new express.Router()
-    router.get('/', createController(ctrlName, controller.list || crud.list))
-    router.get('/:id', createController(ctrlName, controller.show || crud.show))
-    router.post('/', createController(ctrlName, controller.create || crud.create))
-    router.put('/:id', createController(ctrlName, controller.update || crud.update))
-    router.delete('/:id', createController(ctrlName, controller.delete || crud.delete))
-    // _.omit(Object.keys(controller), ['list','show','create','update','delete'], ctrlActionName => {
-    //   router.all('/' + ctrlActionName, createController(ctrlName, controller[ctrlActionName]))
-    // })
-    app.use('/' + ctrlName, router)
+  app.use((ctx, next) => {
+    ctx.app = app
+    return next()
   })
 
-  app.use(express.static(path.join(env.root || '.', env.staticPath || 'public')))
+  app.router.param('resource', (resource, ctx, next) => {
+    ctx.resource = resource
+    return next()
+  })
 
-  let server = http.createServer(app)
+  for (let [path, middleware] of Object.entries(env.policies)) {
+    debug('add policy :', path, ':', middleware.name)
+    app.router.use(path, middleware)
+  }
 
-  app.server = server
+  for (let [name, controller] of Object.entries(env.controllers)) {
+    if (name === 'crud') continue
+    debug('add controller :', name)
+    let router = new Router()
+    router.get('/', app.controller(name, controller.list || env.controllers.crud.list))
+    router.get('/:id', app.controller(name, controller.show || env.controllers.crud.show))
+    router.post('/', app.controller(name, controller.create || env.controllers.crud.create))
+    router.put('/:id', app.controller(name, controller.update || env.controllers.crud.update))
+    router.delete('/:id', app.controller(name, controller.delete || env.controllers.crud.delete))
+    app.router.use('/' + name, router.routes())
+  }
 
-  app.run = function(port) {
+  // app.use(express.static(path.join(env.root || '.', env.staticPath || 'public')))
+
+  env.bootstrap(app)
+
+  app.use(app.router.routes())
+
+  app.run = function(
+    port = env.port || 3000,
+    host = env.host || '0.0.0.0'
+  ) {
     debug('run', port)
-    this.server.listen(port, host, () => {
-      debug('listening', server.address())
+    app.listen(port, host, () => {
+      debug('listening http://%s:%d', host, port)
     })
   }
+
   return app
 }

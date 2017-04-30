@@ -1,13 +1,13 @@
-FROM node:boron
+FROM node:latest
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-ADD Makefile Makefile
 ADD package.json package.json
+ADD yarn.lock yarn.lock
 
-RUN make install
+RUN yarn install
 
 ADD . .
 
-CMD [ "make" ]
+CMD [ "yarn", "start" ]

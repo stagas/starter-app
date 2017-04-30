@@ -1,0 +1,4 @@
+{
+  "presets": ["node7"],
+  "plugins": ["transform-async-to-generator","syntax-async-functions","add-module-exports"]
+}

@@ -1,19 +1,28 @@
 // controller: hello
 
-module.exports = {
+export default {
   list(ctx) {
-    ctx.res.status(200).send('world')
+    ctx.status = 200
+    ctx.body = 'world'
   },
 
   show(ctx) {
-    ctx.res.status(200).send('world')
+    ctx.status = 200
+    ctx.body = 'world'
   },
 
   create(ctx) {
-    ctx.res.status(200).send('hello 2')
+    ctx.status = 200
+    ctx.body = 'hello 2'
+  },
+
+  update(ctx) {
+    ctx.status = 200
+    ctx.body = 'ok'
   },
 
   foo(ctx) {
-    ctx.res.status(200).send('hello 1')
+    ctx.status = 200
+    ctx.body = 'hello 1'
   }
 }

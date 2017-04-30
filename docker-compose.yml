@@ -4,12 +4,13 @@ services:
     container_name: starter
     build:
       context: .
-    command: ["make","dev"]
+    command: ["yarn", "dev"]
     ports:
       - 3000:3000
     volumes:
       - .:/usr/src/app/
     environment:
+      - NODE_PATH=.
       - DEBUG_COLORS=true
       - DEBUG=starter:*
       - PORT=3000
