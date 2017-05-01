@@ -42,7 +42,7 @@ test('crud.update', async t => {
 })
 
 test('crud.delete', async t => {
-  let ctx = { services, modelName: 'posts', id: 1 }
+  let ctx = { services, modelName: 'posts', id: 1, throw: () => {} }
   await crud.delete(ctx)
   t.truthy(services.crud.delete.calledOnce)
 })
