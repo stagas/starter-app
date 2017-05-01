@@ -1,11 +1,13 @@
 import Debug from 'debug'
 import http from 'http'
+import fs from 'mz/fs'
 import Koa from 'koa'
 import cors from 'kcors'
 import logger from 'koa-logger'
 import helmet from 'koa-helmet'
 import bodyParser from 'koa-bodyparser'
 import Router from 'koa-router'
+import swagger from 'koa2-swagger-ui'
 import { singular } from 'pluralize'
 // const compression = require('compression')
 // const methodOverride = require('method-override')
@@ -36,7 +38,14 @@ export default env => {
   app.use(cors())
   app.use(helmet())
   app.use(bodyParser())
-
+  app.router.get('/swagger.json', async ctx => {
+    ctx.body = await fs.readFile(__dirname + '/swagger.json', 'utf8')
+  })
+  app.use(swagger({
+    swaggerOptions: {
+      url: '/swagger.json'
+    }
+  }))
   app.use((ctx, next) => {
     ctx.app = app
     return next()
@@ -69,8 +78,6 @@ export default env => {
     router.delete('/:id', app.controller(name, controller.delete || env.controllers.crud.delete))
     app.router.use('/' + name, router.routes())
   }
-
-  // app.use(express.static(path.join(env.root || '.', env.staticPath || 'public')))
 
   env.bootstrap(app)
 

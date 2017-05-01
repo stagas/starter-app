@@ -6,10 +6,12 @@ import author from './author'
 export default options => {
   let db = new Sequelize(options)
 
-  ;[
+  let models = [
     post(db),
     author(db)
-  ].forEach(model => model.relations())
+  ]
+
+  models.forEach(model => model.relations())
 
   return db.sync()
 }

@@ -1,4 +1,3 @@
-
 const permissions = {
   POST: 'create',
   GET: 'read',

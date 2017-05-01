@@ -1,5 +1,3 @@
-// controller: hello
-
 export default {
   list(ctx) {
     ctx.status = 200

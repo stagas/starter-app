@@ -1,11 +1,10 @@
-
 export default {
-  list(ctx) {
-    return ctx.services.crud.list(ctx.modelName)
+  async list(ctx) {
+    ctx.body = await ctx.services.crud.list(ctx.modelName)
   },
 
-  show(ctx) {
-    ctx.body = ctx.services.crud.show(ctx.modelName, ctx.id)
+  async show(ctx) {
+    ctx.body = await ctx.services.crud.show(ctx.modelName, ctx.id)
   },
 
   async create(ctx) {

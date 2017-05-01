@@ -8,7 +8,16 @@ export default app => {
     ctx.services = app.services
 
     ctx.user = {
-      permissions: ['read:hello','update:hello','read:foo','read:posts','create:posts','create:authors','update:authors']
+      permissions: [
+        'read:hello',
+        'update:hello',
+        'read:foo',
+        'read:posts',
+        'create:posts',
+        'create:authors',
+        'read:authors',
+        'update:authors'
+      ]
     }
 
     return next()

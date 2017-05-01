@@ -1,8 +1,11 @@
-const starter = require('./starter')
-const models = require('./api/models')
-const env = require('./config/env')
+import starter from 'starter'
+import models from 'api/models'
+import env from 'config/env'
+import swagger from 'libs/swagger-generator'
 
-let app = module.exports = starter(env)
+let app = starter(env)
+
+export default app
 
 if (require.main === module) {
   let port = process.argv[2]

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "babel-node index.js",
-    "dev": "nodemon index.js --exec babel-node",
+    "dev": "nodemon index.js --exec babel-node --ignore swagger.json",
     "build": "babel index.js -d dist",
     "clean:modules": "rm -rf node_modules",
     "clean:install": "yarn clean:modules && yarn clean && yarn install",
@@ -28,9 +28,12 @@
     "koa-jwt": "^3.2.1",
     "koa-logger": "^2.0.1",
     "koa-router": "^7.1.1",
+    "koa2-swagger-ui": "^2.3.0",
     "lodash": "^4.17.4",
+    "mz": "^2.6.0",
     "pluralize": "^4.0.0",
     "sequelize": "^3.30.4",
+    "sinon": "^2.1.0",
     "sqlite3": "^3.1.8"
   },
   "devDependencies": {

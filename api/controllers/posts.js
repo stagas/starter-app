@@ -1,5 +1,3 @@
-// controller: posts
-
 export default {
   async create(ctx) {
     ctx.body = await ctx.services.crud.create('post', {

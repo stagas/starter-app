@@ -1,4 +1,3 @@
-
 export default app => {
   let debug = app.debug('services:crud')
 
