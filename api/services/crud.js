@@ -20,15 +20,16 @@ export default app => {
     async update(modelName, id, data) {
       debug('update', modelName, id, data)
       let model = await app.db.models[modelName].findById(id)
-      if (model == null) return
+      if (model === null) return null
       Object.assign(model, data)
       await model.save()
       return model
     },
 
-    delete(modelName, id) {
+    async delete(modelName, id) {
       debug('delete', modelName, id)
-      return app.db.models[modelName].delete(id)
+      let deleted = await app.db.models[modelName].destroy({ where: { id: parseInt(id) }})
+      return Boolean(deleted) || null
     }
   }
 }

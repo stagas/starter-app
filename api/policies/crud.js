@@ -10,7 +10,7 @@ export default function crud(ctx, next) {
   let p = permissions[ctx.method] + ':' + ctx.resource
 
   let hasPermissions = ctx.user.permissions.indexOf(p) > -1
-  debug(ctx.method, 'need:', p, '-- has:', hasPermissions, ctx.user.permissions)
+  debug(ctx.method, p, '- authorized:', hasPermissions)
 
   if (!hasPermissions) {
     ctx.status = 403

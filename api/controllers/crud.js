@@ -5,6 +5,7 @@ export default {
 
   async show(ctx) {
     ctx.body = await ctx.services.crud.show(ctx.modelName, ctx.id)
+    if (ctx.body === null) ctx.throw(404)
   },
 
   async create(ctx) {
@@ -13,9 +14,14 @@ export default {
 
   async update(ctx) {
     ctx.body = await ctx.services.crud.update(ctx.modelName, ctx.id, ctx.req.body)
+    if (ctx.body === null) ctx.throw(404)
   },
 
-  delete(ctx) {
-    return ctx.services.crud.delete(ctx.modelName, ctx.id)
+  async delete(ctx) {
+    if (!(await ctx.services.crud.delete(ctx.modelName, ctx.id))) {
+      ctx.throw(404)
+    } else {
+      ctx.status = 200
+    }
   }
 }
