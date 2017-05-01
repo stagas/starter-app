@@ -24,6 +24,15 @@ for (let [path, controller] of Object.entries(env.controllers)) {
     delete: { summary: 'Deletes a ' + path, tags, responses }
   }
   paths['/' + path + '/{id}'] = definition
+  definition.parameters = [
+    {
+      in: 'path',
+      name: 'id',
+      type: 'integer',
+      required: true,
+      description: 'Resource id'
+    }
+  ]
 }
 
 fs.writeFileSync(__dirname + '/../swagger.json', JSON.stringify(swagger, null, 2), 'utf8')
