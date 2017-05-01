@@ -16,7 +16,8 @@ export default app => {
         'create:posts',
         'create:authors',
         'read:authors',
-        'update:authors'
+        'update:authors',
+        'delete:authors'
       ]
     }
 
