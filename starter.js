@@ -7,11 +7,11 @@ import logger from 'koa-logger'
 import helmet from 'koa-helmet'
 import bodyParser from 'koa-bodyparser'
 import Router from 'koa-router'
-import swagger from 'koa2-swagger-ui'
+import { ui as docs } from 'swagger2-koa'
+import * as swagger from 'swagger2'
 import { singular } from 'pluralize'
 // const compression = require('compression')
 // const methodOverride = require('method-override')
-
 const debug = Debug('starter')
 
 export default env => {
@@ -19,15 +19,16 @@ export default env => {
 
   let app = new Koa()
 
-  app.router = new Router()
+  let swaggerFile = swagger.loadDocumentSync(__dirname + '/swagger.yml');
+
+  app.router = new Router
 
   app.debug = (namespace) => {
     return Debug(`${env.name}:${namespace}`)
   }
 
   app.controller = (name, action) => {
-    debug('create controller : %s.%s', name, action.name)
-    return async (ctx, next) => {
+    return async (ctx) => {
       ctx.debug = app.debug(`controller:${name}`)
       ctx.debug(action.name, name)
       await action(ctx)
@@ -38,45 +39,19 @@ export default env => {
   app.use(cors())
   app.use(helmet())
   app.use(bodyParser())
-  app.router.get('/swagger.json', async ctx => {
-    ctx.body = await fs.readFile(__dirname + '/swagger.json', 'utf8')
-  })
-  app.use(swagger({
-    swaggerOptions: {
-      url: '/swagger.json'
-    }
-  }))
+  app.use(docs(swaggerFile))
   app.use((ctx, next) => {
     ctx.app = app
     return next()
   })
 
-  app.router.param('resource', (resource, ctx, next) => {
-    ctx.resource = resource
-    ctx.modelName = singular(resource)
-    return next()
-  })
-
-  app.router.param('id', (id, ctx, next) => {
-    ctx.id = id
-    return next()
-  })
-
-  for (let [path, middleware] of Object.entries(env.policies)) {
-    debug('add policy :', path, ':', middleware.name)
-    app.router.use(path, middleware)
-  }
-
-  for (let [name, controller] of Object.entries(env.controllers)) {
-    if (name === 'crud') continue
-    debug('add controller :', name)
-    let router = new Router()
-    router.get('/', app.controller(name, controller.list || env.controllers.crud.list))
-    router.get('/:id', app.controller(name, controller.show || env.controllers.crud.show))
-    router.post('/', app.controller(name, controller.create || env.controllers.crud.create))
-    router.put('/:id', app.controller(name, controller.update || env.controllers.crud.update))
-    router.delete('/:id', app.controller(name, controller.delete || env.controllers.crud.delete))
-    app.router.use('/' + name, router.routes())
+  for (let [path, endpoint] of Object.entries(swaggerFile.paths)) {
+    for (let [method, desc] of Object.entries(endpoint)) {
+      let [controllerName, controllerMethod] = desc.action.split('.')
+      debug('create route :', method.toUpperCase(), path, '->', desc.action)
+      let controller = app.controller(controllerName, env.controllers[controllerName][controllerMethod])
+      app.router[method.toLowerCase()](path, controller)
+    }
   }
 
   env.bootstrap(app)
@@ -87,9 +62,9 @@ export default env => {
     port = env.port || 3000,
     host = env.host || '0.0.0.0'
   ) {
-    debug('run', port)
+    debug(`run(${port}, '${host}')`)
     app.listen(port, host, () => {
-      debug('listening http://%s:%d', host, port)
+      debug('server listening : http://%s:%d', host, port)
     })
   }
 

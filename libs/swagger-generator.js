@@ -11,6 +11,44 @@ let responses = {
   200: { description: 'OK' }
 }
 
+swagger.definitions = {
+  hello: {
+    type: 'object',
+    properties: {
+      title: 'The title',
+      body: 'The body'
+    }
+  },
+  foo: {
+    type: 'object',
+    properties: {
+      title: 'The title',
+      body: 'The body'
+    }
+  },
+  crud: {
+    type: 'object',
+    properties: {
+      title: 'The title',
+      body: 'The body'
+    }
+  },
+  posts: {
+    type: 'object',
+    properties: {
+      title: 'The title',
+      body: 'The body'
+    }
+  },
+  authors: {
+    type: 'object',
+    properties: {
+      title: 'The title',
+      body: 'The body'
+    }
+  }
+}
+
 for (let [path, controller] of Object.entries(env.controllers)) {
   let tags = [path]
   let definition = {
@@ -31,6 +69,14 @@ for (let [path, controller] of Object.entries(env.controllers)) {
       type: 'integer',
       required: true,
       description: 'Resource id'
+    },
+    {
+      in: 'body',
+      name: path,
+      description: 'The ' + path + ' to create.',
+      schema: {
+        $ref: '#/definitions/' + path
+      }
     }
   ]
 }
