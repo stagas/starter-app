@@ -62,9 +62,12 @@ export default env => {
     port = env.port || 3000,
     host = env.host || '0.0.0.0'
   ) {
-    debug(`run(${port}, '${host}')`)
-    app.listen(port, host, () => {
-      debug('server listening : http://%s:%d', host, port)
+    return new Promise(resolve => {
+      debug(`run(${port}, '${host}')`)
+      app.server = app.listen(port, host, () => {
+        debug('server listening : http://%s:%d', host, port)
+        resolve()
+      })
     })
   }
 

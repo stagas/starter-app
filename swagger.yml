@@ -45,7 +45,7 @@ paths:
               username: demo
               password: pass
       responses:
-        default:
+        200:
           description: successful operation
           headers:
             X-Rate-Limit:
@@ -61,10 +61,13 @@ paths:
             properties:
               username:
                 type: string
+                required: true
               email:
                 type: string
+                required: true
               access_token:
                 type: string
+                required: true
             example:
               username: demo
               email: demo@foo.com
@@ -78,7 +81,6 @@ paths:
       summary: Logs out current logged in user session
       description: ''
       action: user.logout
-      parameters: ''
       responses:
         200:
           description: successful operation

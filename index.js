@@ -5,6 +5,7 @@ import env from 'config/env'
 let app = starter(env)
 
 export default app
+export { models, env }
 
 if (require.main === module) {
   let port = process.argv[2]

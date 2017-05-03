@@ -1,33 +1,58 @@
 import fs from 'fs'
 import * as swagger from 'swagger2'
 import h from 'handlebars'
+import amanda from 'amanda'
+import Parser from 'swagger-parameters'
+import request from 'request-promise-native'
+import app, { models, env } from '../'
 
-let swaggerFile = swagger.loadDocumentSync(__dirname + '/../swagger.yml');
+runServer().then(runTests)
 
-let template = `
-{{#each paths as |endpoint path|}}
-describe('{{path}}', () => {
-  {{#each endpoint as |desc method|}}
-  describe('when doing a {{method}} request', async it => {
-    let data = await request.{{method}}('{{path}}', {{json desc.parameters.[0].schema.example}})
-    it('should reply with the correct data', () => {
-      assert.deepEqual({{json desc.responses.default.schema.example}}, data)
+function runServer() {
+  return models(env.db)
+    .then(db => {
+      app.db = db
+      return app.run()
     })
-  })
-  {{/each}}
-})
+}
 
-{{/each}}
-`
+function runTests() {
+  let api = swagger.loadDocumentSync(__dirname + '/../swagger.yml');
 
-h.registerHelper('json', function(obj, options) {
-  return new h.SafeString(
-    JSON.stringify(obj || {}, null, 2).split(/\n/g).map((line, i) => i > 0 ? '      ' + line : line).join('\n')
-  )
-})
+  let tests = []
 
-let render = h.compile(template)
+  for (let [path, endpoint] of Object.entries(api.paths)) {
+    tests.push(test(path, endpoint)())
+  }
 
-let out = render(swaggerFile)
+  Promise.all(tests).then(result => {
+    console.log('OK tests pass!')
+  }).catch(e => {
+    console.error('FAIL:', e.stack)
+  }).then(() => app.server.close())
 
-console.log(out)
+  function test(path, endpoint) {
+    return async () => {
+      let errors = []
+      for (let [method, desc] of Object.entries(endpoint)) {
+        let req = {}
+        req.method = method
+        req.url = api.schemes[0] + '://' + api.host + api.basePath + path.slice(1)
+        let bodyParam = (desc.parameters || []).find(param => param.in === 'body')
+        if (bodyParam) {
+          req.body = bodyParam.schema.example
+        } else {
+          return
+        }
+        req.json = true
+        errors = await request(req).then((body, res) => {
+          let validator = amanda('json')
+          return new Promise(resolve => {
+            validator.validate(body, desc.responses[200].schema, resolve)
+          })
+        })
+        if (errors && errors.length) throw new Error(path + ': ' + errors[0].message)
+      }
+    }
+  }
+}
