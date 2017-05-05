@@ -9,11 +9,12 @@ export default {
   },
 
   async create(ctx) {
-    ctx.body = await ctx.services.crud.create(ctx.modelName, ctx.req.body)
+    ctx.body = await ctx.services.crud.create(ctx.modelName, ctx.request.body)
+    ctx.status = 201
   },
 
   async update(ctx) {
-    ctx.body = await ctx.services.crud.update(ctx.modelName, ctx.id, ctx.req.body)
+    ctx.body = await ctx.services.crud.update(ctx.modelName, ctx.id, ctx.request.body)
     if (ctx.body === null) ctx.throw(404)
   },
 
