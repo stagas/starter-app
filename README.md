@@ -1,5 +1,7 @@
-starter
-=======
+starter-app
+===========
+
+An example of an app using [Starter](https://github.com/blended/starter)
 
 ### Getting started
 

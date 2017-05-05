@@ -4,10 +4,9 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 ADD package.json package.json
-ADD yarn.lock yarn.lock
 
-RUN yarn install
+RUN npm install
 
 ADD . .
 
-CMD [ "yarn", "start" ]
+CMD [ "npm", "start" ]

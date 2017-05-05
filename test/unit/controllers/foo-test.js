@@ -1,5 +1,5 @@
 import test from 'ava'
-import foo from 'api/controllers/foo'
+import foo from '../../../api/controllers/foo'
 
 test('foo.show', async t => {
   let ctx = { debug: () => {} }

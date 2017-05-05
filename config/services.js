@@ -1,4 +1,4 @@
-import CrudService from 'api/services/crud'
+import CrudService from '../api/services/crud'
 
 export default app => {
   return {

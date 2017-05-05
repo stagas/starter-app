@@ -1,7 +1,6 @@
 import starter from 'starter'
-import models from 'api/models'
-import env from 'config/env'
-import swagger from 'libs/swagger-generator'
+import models from './api/models'
+import env from './config/env'
 
 let app = starter(env)
 

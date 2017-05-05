@@ -1,5 +1,5 @@
 import test from 'ava'
-import crud from 'api/controllers/crud'
+import crud from '../../../api/controllers/crud'
 import { spy } from 'sinon'
 
 let services = {
