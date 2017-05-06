@@ -1,5 +1,1 @@
-import crud from './crud'
-
-export default {
-  '/:resource/:id': crud
-}
+export { default as authorizedUser } from './authorizedUser'

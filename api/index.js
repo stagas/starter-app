@@ -23,7 +23,6 @@ export async function bootstrap(app) {
         'read:hello',
         'update:hello',
         'read:foo',
-        'read:posts',
         'create:posts',
         'create:authors',
         'read:authors',
@@ -58,7 +57,7 @@ export const controllers = {
 
 // policies
 
-import policies from './policies'
+import * as policies from './policies'
 
 // services
 
