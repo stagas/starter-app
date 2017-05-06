@@ -15,16 +15,17 @@ info:
 host: localhost:3000
 basePath: /
 tags:
-  - name: user
+  - name: User
     description: User operations
+  - name: Post
+    description: Post operations
 schemes: [http]
 consumes: [application/json]
 produces: [application/json]
 paths:
   /user/login:
     post:
-      tags:
-        - user
+      tags: [User]
       summary: Logs user into the system
       description: ''
       action: user.login
@@ -43,11 +44,28 @@ paths:
           schema: { $ref: '#/definitions/Error' }
   /user/logout:
     post:
-      tags:
-        - user
+      tags: [User]
       summary: Logs out current logged in user session
-      description: ''
       action: user.logout
+      responses:
+        200:
+          description: successful operation
+  /posts:
+    get:
+      tags: [Post]
+      summary: Get all posts
+      action: posts.list
+      responses:
+        200:
+          description: successful operation
+  /posts/{id}:
+    get:
+      tags: [Post]
+      summary: Get a single post
+      action: posts.show
+      parameters:
+        - name: id
+          in: path
       responses:
         200:
           description: successful operation

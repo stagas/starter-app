@@ -1,8 +1,16 @@
+import { singular } from 'pluralize'
 import models from './models'
 
 export async function bootstrap(app) {
+  let debug = app.debug('bootstrap')
   app.controllers = controllers
   app.services = services(app)
+
+  app.router.all('/:resource/:id?', (ctx, next) => {
+    debug('resource', ctx.params.resource, 'id', ctx.params.id)
+    ctx.params.model = singular(ctx.params.resource)
+    return next()
+  })
 
   app.use((ctx, next) => {
     ctx.db = app.db
