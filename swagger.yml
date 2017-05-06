@@ -22,6 +22,13 @@ tags:
 schemes: [http]
 consumes: [application/json]
 produces: [application/json]
+securityDefinitions:
+  authorizedUser:
+    type: oauth2
+    authorizationUrl: http://swagger.io/api/oauth/dialog
+    flow: application
+    scopes:
+      read:posts: Read posts
 paths:
   /user/login:
     post:
@@ -58,6 +65,8 @@ paths:
       responses:
         200:
           description: successful operation
+      security:
+        - authorizedUser: [read:posts]
   /posts/{id}:
     get:
       tags: [Post]
@@ -69,6 +78,8 @@ paths:
       responses:
         200:
           description: successful operation
+      security:
+        - authorizedUser: [read:posts]
 definitions:
   Error:
     type: object

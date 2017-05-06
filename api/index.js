@@ -3,7 +3,9 @@ import models from './models'
 
 export async function bootstrap(app) {
   let debug = app.debug('bootstrap')
+
   app.controllers = controllers
+  app.policies = policies
   app.services = services(app)
 
   app.router.all('/:resource/:id?', (ctx, next) => {
@@ -56,11 +58,7 @@ export const controllers = {
 
 // policies
 
-import CrudPolicy from './policies/crud'
-
-export const policies = {
-  crud: CrudPolicy
-}
+import policies from './policies'
 
 // services
 
