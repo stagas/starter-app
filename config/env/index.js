@@ -1,13 +1,14 @@
+import path from 'path'
+import pkg from '../../package.json'
+
+const root = path.join(__dirname, '..', '..')
+
 export default {
-  name: require('../../package.json').name,
+  version: pkg.version,
+  name: pkg.name,
   port: process.env.PORT,
   host: process.env.HOST,
-  swaggerFile: __dirname + '/../../swagger.yml',
-  bootstrap: require('../bootstrap'),
-  controllers: require('../controllers'),
-  policies: require('../policies'),
-  routes: require('../routes'),
-  db: {
-    dialect: 'sqlite'
-  }
+  static: path.join(root, 'public'),
+  swagger: path.join(root, 'swagger.yml'),
+  db: { dialect: 'sqlite' }
 }

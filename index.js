@@ -1,15 +1,15 @@
 import starter from '@blended/starter'
-import models from './api/models'
+import { bootstrap } from './api'
 import env from './config/env'
 
 let app = starter(env)
 
 export default app
-export { models, env }
+export { bootstrap, env }
 
 if (require.main === module) {
   let port = process.argv[2]
-  models(env.db).then(db => {
+  bootstrap(app).then(db => {
     app.db = db
     app.run(port)
   })

@@ -1,7 +1,9 @@
 swagger: '2.0'
 info:
   description: |
-    Microservice Starter API Documentation
+    ### API
+
+    Here you will find details about our API.
   version: 1.0.0
   title: Starter
   termsOfService: 'http://microservice-starter.io/terms/'
@@ -15,12 +17,9 @@ basePath: /
 tags:
   - name: user
     description: User operations
-schemes:
-  - http
-consumes:
-  - application/json
-produces:
-  - application/json
+schemes: [http]
+consumes: [application/json]
+produces: [application/json]
 paths:
   /user/login:
     post:
@@ -34,46 +33,14 @@ paths:
           in: body
           description: The user
           required: true
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-              password:
-                type: string
-            example:
-              username: demo
-              password: pass
+          schema: { $ref: '#/definitions/UserLogin' }
       responses:
         200:
           description: successful operation
-          headers:
-            X-Rate-Limit:
-              type: integer
-              format: int32
-              description: calls per hour allowed by the user
-            X-Expires-After:
-              type: string
-              format: date-time
-              description: date in UTC when token expires
-          schema:
-            type: object
-            properties:
-              username:
-                type: string
-                required: true
-              email:
-                type: string
-                required: true
-              access_token:
-                type: string
-                required: true
-            example:
-              username: demo
-              email: demo@foo.com
-              access_token: abcd1234
+          schema: { $ref: '#/definitions/User' }
         400:
           description: Invalid username/password supplied
+          schema: { $ref: '#/definitions/Error' }
   /user/logout:
     post:
       tags:
@@ -85,124 +52,29 @@ paths:
         200:
           description: successful operation
 definitions:
-  Order:
+  Error:
     type: object
     properties:
-      id:
-        type: integer
-        format: int64
-      petId:
-        type: integer
-        format: int64
-      quantity:
-        type: integer
-        format: int32
-      shipDate:
-        type: string
-        format: date-time
-      status:
-        type: string
-        description: Order Status
-        enum:
-          - placed
-          - approved
-          - delivered
-      complete:
-        type: boolean
-        default: false
-    xml:
-      name: Order
-  Category:
-    type: object
-    properties:
-      id:
-        type: integer
-        format: int64
-      name:
-        type: string
-    xml:
-      name: Category
+      status: { type: integer }
+      type: { type: string }
+      message: { type: string }
   User:
     type: object
     properties:
-      id:
-        type: integer
-        format: int64
-      username:
-        type: string
-      firstName:
-        type: string
-      lastName:
-        type: string
-      email:
-        type: string
-      password:
-        type: string
-      phone:
-        type: string
-      userStatus:
-        type: integer
-        format: int32
-        description: User Status
-    xml:
-      name: User
-  Tag:
+      id: { type: string }
+      name: { type: string }
+      email: { type: string }
+    required: [email]
+    example:
+      username: demo
+      email: demo@foo.com
+      access_token: abcd1234
+  UserLogin:
     type: object
     properties:
-      id:
-        type: integer
-        format: int64
-      name:
-        type: string
-    xml:
-      name: Tag
-  Pet:
-    type: object
-    required:
-      - name
-      - photoUrls
-    properties:
-      id:
-        type: integer
-        format: int64
-      category:
-        $ref: '#/definitions/Category'
-      name:
-        type: string
-        example: doggie
-      photoUrls:
-        type: array
-        xml:
-          name: photoUrl
-          wrapped: true
-        items:
-          type: string
-      tags:
-        type: array
-        xml:
-          name: tag
-          wrapped: true
-        items:
-          $ref: '#/definitions/Tag'
-      status:
-        type: string
-        description: pet status in the store
-        enum:
-          - available
-          - pending
-          - sold
-    xml:
-      name: Pet
-  ApiResponse:
-    type: object
-    properties:
-      code:
-        type: integer
-        format: int32
-      type:
-        type: string
-      message:
-        type: string
-externalDocs:
-  description: Find out more about Swagger
-  url: 'http://swagger.io'
+      username: { type: string }
+      password: { type: string }
+    required: [username, password]
+    example:
+      username: demo
+      password: pass
