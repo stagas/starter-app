@@ -7,11 +7,12 @@
     "start": "babel-node index.js",
     "dev": "nodemon index.js --exec babel-node -e js,yml,json",
     "build": "babel index.js -d dist",
+    "docs": "./docs.sh",
     "clean:modules": "rm -rf node_modules",
     "clean:install": "yarn clean:modules && yarn clean && yarn install",
     "test": "ava -v",
     "test:watch": "ava -v --watch",
-    "test:swagger": "babel-node libs/swagger-tests",
+    "test:swagger": "babel-node test.js",
     "docker:dev": "docker-compose up",
     "lint": "eslint ./index.js"
   },

@@ -9,8 +9,7 @@ export { bootstrap, env }
 
 if (require.main === module) {
   let port = process.argv[2]
-  bootstrap(app).then(db => {
-    app.db = db
+  bootstrap(app).then(() => {
     app.run(port)
   })
 }
