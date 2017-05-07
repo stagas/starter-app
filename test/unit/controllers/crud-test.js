@@ -1,4 +1,4 @@
-import test from 'ava'
+import assert from 'assert'
 import crud from '../../../api/controllers/crud'
 import { spy } from 'sinon'
 
@@ -12,37 +12,39 @@ let services = {
   }
 }
 
-test('crud', t => {
-  t.is(typeof crud, 'object')
-  t.deepEqual(Object.keys(crud), ['list','show','create','update','delete'])
-})
+describe('crud', () => {
+  it('should be an object', () => {
+    assert.equal(typeof crud, 'object')
+    assert.deepEqual(Object.keys(crud), ['list','show','create','update','delete'])
+  })
 
-test('crud.list', async t => {
-  let ctx = { services, params: { model: 'Post' } }
-  await crud.list(ctx)
-  t.truthy(services.crud.list.calledOnce)
-})
+  it('list()', async () => {
+    let ctx = { services, params: { model: 'Post' } }
+    await crud.list(ctx)
+    assert.ok(services.crud.list.calledOnce)
+  })
 
-test('crud.show', async t => {
-  let ctx = { services, params: { model: 'Post', id: 1 } }
-  await crud.show(ctx)
-  t.truthy(services.crud.show.calledOnce)
-})
+  it('show()', async () => {
+    let ctx = { services, params: { model: 'Post', id: 1 } }
+    await crud.show(ctx)
+    assert.ok(services.crud.show.calledOnce)
+  })
 
-test('crud.create', async t => {
-  let ctx = { services, params: { model: 'Post' }, request: { body: { foo: 'bar' }} }
-  await crud.create(ctx)
-  t.truthy(services.crud.create.calledOnce)
-})
+  it('create()', async () => {
+    let ctx = { services, params: { model: 'Post' }, request: { body: { foo: 'bar' }} }
+    await crud.create(ctx)
+    assert.ok(services.crud.create.calledOnce)
+  })
 
-test('crud.update', async t => {
-  let ctx = { services, params: { model: 'Post', id: 1 }, request: { body: { foo: 'baz' }}}
-  await crud.update(ctx)
-  t.truthy(services.crud.update.calledOnce)
-})
+  it('update()', async () => {
+    let ctx = { services, params: { model: 'Post', id: 1 }, request: { body: { foo: 'baz' }}}
+    await crud.update(ctx)
+    assert.ok(services.crud.update.calledOnce)
+  })
 
-test('crud.delete', async t => {
-  let ctx = { services, params: { model: 'Post', id: 1 }, throw: () => {} }
-  await crud.delete(ctx)
-  t.truthy(services.crud.delete.calledOnce)
+  it('delete()', async () => {
+    let ctx = { services, params: { model: 'Post', id: 1 }, throw: () => {} }
+    await crud.delete(ctx)
+    assert.ok(services.crud.delete.calledOnce)
+  })
 })

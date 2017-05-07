@@ -1,41 +1,47 @@
-import test from 'ava'
-import app from '../../../'
-import request from 'superagent'
+import flareGun from 'flare-gun'
+import joi from 'joi'
+import init from '../../../'
 
-let baseUrl
+let request
 
-test.before(async t => {
-  await app.run(3000 + (Math.random() * 3000 | 0))
-  baseUrl = 'http://' + app.config.host + ':' + app.config.port
+before(async function () {
+  this.timeout(60000)
+  let app = await init().run({
+    port: 3000 + (Math.random() * 3000 | 0),
+  })
+  request = flareGun.route(app.config.baseUrl)
 })
 
-test.serial('GET /authors should be an empty array', t => {
-  return request
-    .get(baseUrl + '/authors')
-    .then(res => {
-      t.truthy(Array.isArray(res.body))
-      t.is(res.body.length, 0)
-    })
-})
+describe('/authors', () => {
 
-test.serial('POST /authors should create an author', t => {
-  return request
-    .post(baseUrl + '/authors')
-    .send({
-      name: 'John Smith'
-    })
-    .then(res => {
-      t.is(res.body.id, 1)
-      t.is(res.body.name, 'John Smith')
-    })
-})
+  it('GET /authors should be an empty array', () => {
+    return request
+      .get('/authors')
+      .expect(200, joi.array().empty())
+  })
 
-test.serial('GET /authors should return 1 author', t => {
-  return request
-    .get(baseUrl + '/authors')
-    .then(res => {
-      t.truthy(Array.isArray(res.body))
-      t.is(res.body.length, 1)
-      t.is(res.body[0].name, 'John Smith')
-    })
+  it('POST /authors should create an author', () => {
+    return request
+      .post('/authors', { name: 'John Smith' })
+      .expect(201, joi.object({
+        id: 1,
+        name: 'John Smith',
+        createdAt: joi.string(),
+        updatedAt: joi.string()
+      }))
+  })
+
+  it('GET /authors should return 1 author', () => {
+    return request
+      .get('/authors')
+      .expect(200, joi.array().items(
+        joi.object({
+          id: 1,
+          name: 'John Smith',
+          createdAt: joi.string(),
+          updatedAt: joi.string()
+        })
+      ))
+  })
+
 })

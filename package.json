@@ -10,9 +10,11 @@
     "docs": "./docs.sh",
     "clean:modules": "rm -rf node_modules",
     "clean:install": "yarn clean:modules && yarn clean && yarn install",
-    "test": "ava -v",
-    "test:watch": "ava -v --watch",
-    "test:swagger": "babel-node swagger-test.js",
+    "test": "mocha-parallel-tests --require babel-register test/{**,**/**}-test.js",
+    "test:integration": "mocha-parallel-tests --require babel-register test/integration/{**,**/**}-test.js",
+    "test:integration:watch": "mocha --watch --require babel-register test/integration/{**,**/**}-test.js",
+    "test:unit": "mocha --require babel-register test/unit/{**,**/**}-test.js",
+    "test:unit:watch": "mocha --watch --require babel-register test/unit/{**,**/**}-test.js",
     "docker:dev": "docker-compose up",
     "lint": "eslint ./index.js"
   },
@@ -37,7 +39,6 @@
   },
   "devDependencies": {
     "amanda": "^0.5.1",
-    "ava": "^0.19.1",
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -52,14 +53,12 @@
     "eslint-plugin-node": "^4.2.2",
     "eslint-plugin-promise": "^3.5.0",
     "eslint-plugin-standard": "^3.0.1",
+    "flare-gun": "^0.6.8",
+    "joi": "^10.4.1",
+    "mocha": "^3.3.0",
+    "mocha-parallel-tests": "^1.2.9",
     "nodemon": "^1.11.0",
-    "superagent": "^3.5.2",
-    "sinon": "^2.1.0"
-  },
-  "ava": {
-    "require": [
-      "babel-register"
-    ],
-    "babel": "inherit"
+    "sinon": "^2.1.0",
+    "superagent": "^3.5.2"
   }
 }
