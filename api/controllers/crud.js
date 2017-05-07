@@ -13,7 +13,7 @@ export default {
       ctx.body = await ctx.services.crud.create(ctx.params.model, ctx.request.body)
       ctx.status = 201
     } catch (e) {
-      ctx.body = e.message
+      ctx.body = { message: e.message }
       ctx.status = 400
     }
   },

@@ -76,6 +76,7 @@
           <a href="#definition-User"> User </a>
           <a href="#definition-UserLogin"> UserLogin </a>
           <a href="#definition-Post"> Post </a>
+          <a href="#definition-PostResponse"> PostResponse </a>
           <a href="#definition-Author"> Author </a>
         </nav>
       </div>
@@ -245,8 +246,6 @@
                     <span>(400 Bad Request)</span>
                   </h5>
                   <div class="hljs"><pre><code class="lang-json">{
-  <span class="hljs-attr">&quot;status&quot;</span>: <span class="hljs-string">&quot;integer&quot;</span>,
-  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
   <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
 }
 </code></pre> </div>
@@ -440,6 +439,16 @@
                       <p>Author created</p>
                     </div>
                   </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">400 Bad Request</div>
+                      <div class="prop-ref"></div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>Invalid data supplied</p>
+                    </div>
+                  </div>
                 </section>
               </div>
               <div class="doc-examples">
@@ -449,6 +458,15 @@
                   </h5>
                   <div class="hljs"><pre><code class="lang-json">{
   <span class="hljs-attr">&quot;name&quot;</span>: <span class="hljs-string">&quot;John Smith&quot;</span>
+}
+</code></pre> </div>
+                </section>
+                <section>
+                  <h5>Response Example
+                    <span>(400 Bad Request)</span>
+                  </h5>
+                  <div class="hljs"><pre><code class="lang-json">{
+  <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
 }
 </code></pre> </div>
                 </section>
@@ -524,6 +542,7 @@
                   </h5>
                   <div class="hljs"><pre><code class="lang-json">[
   {
+    <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">1</span>,
     <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;A title&quot;</span>,
     <span class="hljs-attr">&quot;body&quot;</span>: <span class="hljs-string">&quot;Sample body&quot;</span>,
     <span class="hljs-attr">&quot;authorId&quot;</span>: <span class="hljs-number">1</span>
@@ -629,6 +648,16 @@
                       <p>Post created</p>
                     </div>
                   </div>
+                  <div class="prop-row prop-group">
+                    <div class="prop-name">
+                      <div class="prop-title">400 Bad Request</div>
+                      <div class="prop-ref"></div>
+                      <!-- <span class="swagger-global"></span> <span class="json-schema-reference"><a href=""></a></span> -->
+                    </div>
+                    <div class="prop-value">
+                      <p>Invalid data supplied</p>
+                    </div>
+                  </div>
                 </section>
               </div>
               <div class="doc-examples">
@@ -637,9 +666,19 @@
                     <span>(201 Created)</span>
                   </h5>
                   <div class="hljs"><pre><code class="lang-json">{
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">1</span>,
   <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;A title&quot;</span>,
   <span class="hljs-attr">&quot;body&quot;</span>: <span class="hljs-string">&quot;Sample body&quot;</span>,
   <span class="hljs-attr">&quot;authorId&quot;</span>: <span class="hljs-number">1</span>
+}
+</code></pre> </div>
+                </section>
+                <section>
+                  <h5>Response Example
+                    <span>(400 Bad Request)</span>
+                  </h5>
+                  <div class="hljs"><pre><code class="lang-json">{
+  <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
 }
 </code></pre> </div>
                 </section>
@@ -735,6 +774,7 @@
                     <span>(200 OK)</span>
                   </h5>
                   <div class="hljs"><pre><code class="lang-json">{
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">1</span>,
   <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;A title&quot;</span>,
   <span class="hljs-attr">&quot;body&quot;</span>: <span class="hljs-string">&quot;Sample body&quot;</span>,
   <span class="hljs-attr">&quot;authorId&quot;</span>: <span class="hljs-number">1</span>
@@ -868,6 +908,7 @@
                     <span>(200 OK)</span>
                   </h5>
                   <div class="hljs"><pre><code class="lang-json">{
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">1</span>,
   <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;A title&quot;</span>,
   <span class="hljs-attr">&quot;body&quot;</span>: <span class="hljs-string">&quot;Sample body&quot;</span>,
   <span class="hljs-attr">&quot;authorId&quot;</span>: <span class="hljs-number">1</span>
@@ -955,16 +996,6 @@
               <div class="doc-copy">
                 <section class="json-schema-properties">
                   <dl>
-                    <dt data-property-name="status">
-                      <span class="json-property-name">status:</span>
-                      <span class="json-property-type">integer</span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
-                    <dt data-property-name="type">
-                      <span class="json-property-name">type:</span>
-                      <span class="json-property-type">string</span>
-                      <span class="json-property-range" title="Value limits"></span>
-                    </dt>
                     <dt data-property-name="message">
                       <span class="json-property-name">message:</span>
                       <span class="json-property-type">string</span>
@@ -977,8 +1008,6 @@
                 <section>
                   <h5>Example</h5>
                   <div class="hljs"><pre><code class="lang-json">{
-  <span class="hljs-attr">&quot;status&quot;</span>: <span class="hljs-string">&quot;integer&quot;</span>,
-  <span class="hljs-attr">&quot;type&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>,
   <span class="hljs-attr">&quot;message&quot;</span>: <span class="hljs-string">&quot;string&quot;</span>
 }
 </code></pre> </div>
@@ -1106,6 +1135,55 @@
                 <section>
                   <h5>Example</h5>
                   <div class="hljs"><pre><code class="lang-json">{
+  <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;A title&quot;</span>,
+  <span class="hljs-attr">&quot;body&quot;</span>: <span class="hljs-string">&quot;Sample body&quot;</span>,
+  <span class="hljs-attr">&quot;authorId&quot;</span>: <span class="hljs-number">1</span>
+}
+</code></pre> </div>
+                </section>
+              </div>
+            </div>
+          </div>
+          <div id="definition-PostResponse" class="definition panel" data-traverse-target="definition-PostResponse">
+            <h2 class="panel-title">
+              <a name="/definitions/PostResponse"></a>PostResponse:
+              <span class="json-property-type">
+                <span class="json-property-type">object</span>
+                <span class="json-property-range" title="Value limits"></span>
+              </span>
+            </h2>
+            <div class="doc-row">
+              <div class="doc-copy">
+                <section class="json-schema-properties">
+                  <dl>
+                    <dt data-property-name="id">
+                      <span class="json-property-name">id:</span>
+                      <span class="json-property-type">integer</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="title">
+                      <span class="json-property-name">title:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="body">
+                      <span class="json-property-name">body:</span>
+                      <span class="json-property-type">string</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                    <dt data-property-name="authorId">
+                      <span class="json-property-name">authorId:</span>
+                      <span class="json-property-type">integer</span>
+                      <span class="json-property-range" title="Value limits"></span>
+                    </dt>
+                  </dl>
+                </section>
+              </div>
+              <div class="doc-examples">
+                <section>
+                  <h5>Example</h5>
+                  <div class="hljs"><pre><code class="lang-json">{
+  <span class="hljs-attr">&quot;id&quot;</span>: <span class="hljs-number">1</span>,
   <span class="hljs-attr">&quot;title&quot;</span>: <span class="hljs-string">&quot;A title&quot;</span>,
   <span class="hljs-attr">&quot;body&quot;</span>: <span class="hljs-string">&quot;Sample body&quot;</span>,
   <span class="hljs-attr">&quot;authorId&quot;</span>: <span class="hljs-number">1</span>

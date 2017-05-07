@@ -10,7 +10,7 @@ api.bootstrap = async app => {
 
   app.controllers = api.controllers
   app.policies = api.policies
-  app.services = api.services(app)
+  app.services = app.context.services = api.services(app)
 
   app.router.all('/:resource/:id?', (ctx, next) => {
     ctx.params.model = singular(ctx.params.resource)
@@ -19,9 +19,6 @@ api.bootstrap = async app => {
   })
 
   app.use((ctx, next) => {
-    ctx.db = app.db
-    ctx.services = app.services
-
     ctx.user = {
       permissions: [
         'read:hello',
@@ -40,7 +37,7 @@ api.bootstrap = async app => {
     return next()
   })
 
-  app.db = await models(app.config.db)
+  app.db = app.context.db = await models(app.config.db)
 }
 
 // controllers

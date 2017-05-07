@@ -82,6 +82,9 @@ paths:
         201:
           description: Author created
           schema: { $ref: '#/definitions/Author' }
+        400:
+          description: Invalid data supplied
+          schema: { $ref: '#/definitions/Error' }
   /posts:
     get:
       tags: [Post]
@@ -94,7 +97,7 @@ paths:
           description: Successful operation
           schema:
             type: array
-            items: { $ref: '#/definitions/Post' }
+            items: { $ref: '#/definitions/PostResponse' }
     post:
       tags: [Post]
       summary: Create a post
@@ -109,7 +112,10 @@ paths:
       responses:
         201:
           description: Post created
-          schema: { $ref: '#/definitions/Post' }
+          schema: { $ref: '#/definitions/PostResponse' }
+        400:
+          description: Invalid data supplied
+          schema: { $ref: '#/definitions/Error' }
   /posts/{id}:
     get:
       tags: [Post]
@@ -125,7 +131,7 @@ paths:
       responses:
         200:
           description: Successful operation
-          schema: { $ref: '#/definitions/Post' }
+          schema: { $ref: '#/definitions/PostResponse' }
     put:
       tags: [Post]
       summary: Update a post
@@ -144,7 +150,7 @@ paths:
       responses:
         200:
           description: Successful operation
-          schema: { $ref: '#/definitions/Post' }
+          schema: { $ref: '#/definitions/PostResponse' }
   /foo:
     get:
       summary: Foo!
@@ -159,8 +165,6 @@ definitions:
   Error:
     type: object
     properties:
-      status: { type: integer }
-      type: { type: string }
       message: { type: string }
   User:
     type: object
@@ -190,6 +194,18 @@ definitions:
       authorId: { type: integer }
     required: [title, body, authorId]
     example:
+      title: A title
+      body: Sample body
+      authorId: 1
+  PostResponse:
+    type: object
+    properties:
+      id: { type: integer }
+      title: { type: string }
+      body: { type: string }
+      authorId: { type: integer }
+    example:
+      id: 1
       title: A title
       body: Sample body
       authorId: 1
