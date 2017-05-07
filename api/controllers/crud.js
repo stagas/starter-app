@@ -9,8 +9,13 @@ export default {
   },
 
   async create(ctx) {
-    ctx.body = await ctx.services.crud.create(ctx.params.model, ctx.request.body)
-    ctx.status = 201
+    try {
+      ctx.body = await ctx.services.crud.create(ctx.params.model, ctx.request.body)
+      ctx.status = 201
+    } catch (e) {
+      ctx.body = e.message
+      ctx.status = 400
+    }
   },
 
   async update(ctx) {

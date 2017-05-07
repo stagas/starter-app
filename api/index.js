@@ -1,16 +1,20 @@
 import { singular } from 'pluralize'
 import models from './models'
 
-export async function bootstrap(app) {
+let api = {}
+
+export default api
+
+api.bootstrap = async app => {
   let debug = app.debug('bootstrap')
 
-  app.controllers = controllers
-  app.policies = policies
-  app.services = services(app)
+  app.controllers = api.controllers
+  app.policies = api.policies
+  app.services = api.services(app)
 
   app.router.all('/:resource/:id?', (ctx, next) => {
-    debug('resource', ctx.params.resource, 'id', ctx.params.id)
     ctx.params.model = singular(ctx.params.resource)
+    ctx.params.model = ctx.params.model[0].toUpperCase() + ctx.params.model.slice(1)
     return next()
   })
 
@@ -23,6 +27,8 @@ export async function bootstrap(app) {
         'read:hello',
         'update:hello',
         'read:foo',
+        'read:posts',
+        'update:posts',
         'create:posts',
         'create:authors',
         'read:authors',
@@ -34,7 +40,7 @@ export async function bootstrap(app) {
     return next()
   })
 
-  app.db = await models(app.env.db)
+  app.db = await models(app.config.db)
 }
 
 // controllers
@@ -46,7 +52,7 @@ import PostsController from './controllers/posts'
 import AuthorsController from './controllers/authors'
 import UserController from './controllers/user'
 
-export const controllers = {
+api.controllers = {
   crud: CrudController,
   hello: HelloController,
   foo: FooController,
@@ -57,13 +63,17 @@ export const controllers = {
 
 // policies
 
-import * as policies from './policies'
+import userPolicy from './policies/user'
+
+api.policies = {
+  user: userPolicy
+}
 
 // services
 
 import CrudService from './services/crud'
 
-export const services = app => {
+api.services = app => {
   return {
     crud: CrudService(app),
     login: (data) => {

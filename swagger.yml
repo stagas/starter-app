@@ -14,16 +14,11 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 host: localhost:3000
 basePath: /
-tags:
-  - name: User
-    description: User operations
-  - name: Post
-    description: Post operations
 schemes: [http]
 consumes: [application/json]
 produces: [application/json]
 securityDefinitions:
-  authorizedUser:
+  user:
     type: oauth2
     authorizationUrl: http://swagger.io/api/oauth/dialog
     flow: application
@@ -39,12 +34,12 @@ paths:
       parameters:
         - name: user
           in: body
-          description: The user
+          description: User credentials
           required: true
           schema: { $ref: '#/definitions/UserLogin' }
       responses:
         200:
-          description: successful operation
+          description: Successful operation
           schema: { $ref: '#/definitions/User' }
         400:
           description: Invalid username/password supplied
@@ -56,30 +51,110 @@ paths:
       action: user.logout
       responses:
         200:
-          description: successful operation
+          description: Successful operation
+          schema:
+            type: string
+  /authors:
+    get:
+      tags: [Author]
+      summary: Get all authors
+      action: authors.list
+      security:
+        - user: [read:authors]
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            type: array
+            items: { $ref: '#/definitions/Author' }
+    post:
+      tags: [Author]
+      summary: Create an author
+      action: authors.create
+      security:
+        - user: [create:authors]
+      parameters:
+        - name: author
+          in: body
+          description: The author data
+          schema: { $ref: '#/definitions/Author' }
+      responses:
+        201:
+          description: Author created
+          schema: { $ref: '#/definitions/Author' }
   /posts:
     get:
       tags: [Post]
       summary: Get all posts
       action: posts.list
+      security:
+        - user: [read:posts]
       responses:
         200:
-          description: successful operation
+          description: Successful operation
+          schema:
+            type: array
+            items: { $ref: '#/definitions/Post' }
+    post:
+      tags: [Post]
+      summary: Create a post
+      action: posts.create
       security:
-        - authorizedUser: [read:posts]
+        - user: [create:posts]
+      parameters:
+        - name: post
+          in: body
+          description: The post data
+          schema: { $ref: '#/definitions/Post' }
+      responses:
+        201:
+          description: Post created
+          schema: { $ref: '#/definitions/Post' }
   /posts/{id}:
     get:
       tags: [Post]
       summary: Get a single post
       action: posts.show
+      security:
+        - user: [read:posts]
       parameters:
         - name: id
           in: path
+          type: integer
+          description: Post id
       responses:
         200:
-          description: successful operation
+          description: Successful operation
+          schema: { $ref: '#/definitions/Post' }
+    put:
+      tags: [Post]
+      summary: Update a post
+      action: posts.update
       security:
-        - authorizedUser: [read:posts]
+        - user: [update:posts]
+      parameters:
+        - name: id
+          in: path
+          type: integer
+          description: Post id
+        - name: post
+          in: body
+          description: The new post data
+          schema: { $ref: '#/definitions/Post' }
+      responses:
+        200:
+          description: Successful operation
+          schema: { $ref: '#/definitions/Post' }
+  /foo:
+    get:
+      summary: Foo!
+      action: foo.show
+      responses:
+        200:
+          description: Foo's response
+          schema:
+            type: string
+            example: foo
 definitions:
   Error:
     type: object
@@ -107,3 +182,21 @@ definitions:
     example:
       username: demo
       password: pass
+  Post:
+    type: object
+    properties:
+      title: { type: string }
+      body: { type: string }
+      authorId: { type: integer }
+    required: [title, body, authorId]
+    example:
+      title: A title
+      body: Sample body
+      authorId: 1
+  Author:
+    type: object
+    properties:
+      name: { type: string }
+    required: [name]
+    example:
+      name: 'John Smith'

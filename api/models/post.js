@@ -1,16 +1,17 @@
 import Sequelize from 'sequelize'
 
 export default db => {
-  let post = db.define('post', {
-    title: Sequelize.STRING,
-    body: Sequelize.STRING,
+  let Post = db.define('Post', {
+    title: { type: Sequelize.STRING, allowNull: false },
+    body: { type: Sequelize.STRING, allowNull: false },
+    authorId: { type: Sequelize.INTEGER, allowNull: false },
     createdAt: Sequelize.DATE,
     updatedAt: Sequelize.DATE
   })
 
-  post.relations = () => {
-    post.belongsTo(db.models.author)
+  Post.relations = () => {
+
   }
 
-  return post
+  return Post
 }

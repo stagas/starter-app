@@ -1,14 +1,24 @@
-import path from 'path'
-import pkg from '../../package.json'
+import development from './development'
+import production from './production'
+import staging from './staging'
+import testing from './testing'
 
-const root = path.join(__dirname, '..', '..')
+let env = {}
 
-export default {
-  version: pkg.version,
-  name: pkg.name,
-  port: process.env.PORT,
-  host: process.env.HOST,
-  static: path.join(root, 'public'),
-  swagger: path.join(root, 'swagger.yml'),
-  db: { dialect: 'sqlite' }
+export default env
+
+switch (process.env.NODE_ENV) {
+  case 'production':
+    Object.assign(env, production)
+    break
+  case 'staging':
+    Object.assign(env, staging)
+    break
+  case 'testing':
+    Object.assign(env, testing)
+    break
+  case 'development':
+  default:
+    Object.assign(env, development)
+    break
 }

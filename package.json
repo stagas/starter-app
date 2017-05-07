@@ -4,8 +4,8 @@
   "description": "microservice starter",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node index.js",
-    "dev": "nodemon index.js --exec babel-node -e js,yml,json",
+    "start": "./docs.sh && babel-node index.js",
+    "dev": "nodemon start --exec yarn -e js,yml,json -i swagger.json -i public",
     "build": "babel index.js -d dist",
     "docs": "./docs.sh",
     "clean:modules": "rm -rf node_modules",

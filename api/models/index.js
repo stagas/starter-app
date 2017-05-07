@@ -1,14 +1,14 @@
 import Sequelize from 'sequelize'
 
-import post from './post'
-import author from './author'
+import Post from './post'
+import Author from './author'
 
 export default options => {
   let db = new Sequelize(options)
 
   let models = [
-    post(db),
-    author(db)
+    Post(db),
+    Author(db)
   ]
 
   models.forEach(model => model.relations())

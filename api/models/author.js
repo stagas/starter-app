@@ -1,13 +1,13 @@
 import Sequelize from 'sequelize'
 
 export default db => {
-  let author = db.define('author', {
-    name: Sequelize.STRING
+  let Author = db.define('Author', {
+    name: { type: Sequelize.STRING, allowNull: false }
   })
 
-  author.relations = () => {
-    author.hasMany(db.models.post)
+  Author.relations = () => {
+    Author.hasMany(db.models.Post, { foreignKey: 'authorId' })
   }
 
-  return author
+  return Author
 }

@@ -1,8 +1,7 @@
+export default function allow(permissions, app) {
+  let debug = app.debug('policy:user')
 
-export default function allow(permissions) {
-  return function authorizedUser(ctx, next) {
-    let debug = ctx.app.debug('policy:authorizedUser')
-
+  return function user(ctx, next) {
     let hasPermissions = permissions.reduce((p, n) => {
       return p && ctx.user.permissions.indexOf(n) > -1
     }, true)
