@@ -8,6 +8,7 @@
     "dev": "nodemon start --exec yarn -e js,yml,json -i swagger.json -i public",
     "build": "babel index.js -d dist",
     "docs": "./docs.sh",
+    "db:clear": "rm db.sqlite",
     "clean:modules": "rm -rf node_modules",
     "clean:install": "yarn clean:modules && yarn clean && yarn install",
     "test": "NODE_ENV=testing mocha-parallel-tests --require babel-register test/{**,**/**}-test.js",
@@ -36,7 +37,8 @@
     "sequelize": "^3.30.4",
     "spectacle-docs": "^0.8.2",
     "sqlite3": "^3.1.8",
-    "swagger2-koa": "^0.0.36"
+    "swagger2-koa": "^0.0.36",
+    "to-pascal-case": "^1.0.0"
   },
   "devDependencies": {
     "amanda": "^0.5.1",

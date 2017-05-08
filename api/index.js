@@ -1,4 +1,5 @@
 import { singular } from 'pluralize'
+import toPascalCase from 'to-pascal-case'
 import models from './models'
 
 let api = {}
@@ -14,7 +15,7 @@ api.bootstrap = async app => {
 
   app.router.all('/:resource/:id?', (ctx, next) => {
     ctx.params.model = singular(ctx.params.resource)
-    ctx.params.model = ctx.params.model[0].toUpperCase() + ctx.params.model.slice(1)
+    ctx.params.model = toPascalCase(ctx.params.model)
     return next()
   })
 

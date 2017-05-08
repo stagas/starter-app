@@ -2,10 +2,7 @@ import starter from '@blended/starter'
 import config from './config'
 import api from './api'
 
-let init = () => {
-  let app = starter(api, config)
-  return app
-}
+let init = () => starter(api, config)
 
 export default init
 

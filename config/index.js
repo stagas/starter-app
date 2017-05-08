@@ -1,6 +1,7 @@
 import path from 'path'
 import env from './env'
 import pkg from '../package.json'
+import merge from '../lib/merge'
 
 let root = path.join(__dirname, '..')
 
@@ -18,10 +19,4 @@ let config = {
 
 export default config
 
-for (let key in env) {
-  if (key in config && typeof config[key] === 'object') {
-    Object.assign(config[key], env[key])
-  } else {
-    config[key] = env[key]
-  }
-}
+merge(config, env)

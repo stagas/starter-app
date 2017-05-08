@@ -2,23 +2,32 @@ import development from './development'
 import production from './production'
 import staging from './staging'
 import testing from './testing'
+import merge from '../../lib/merge'
 
-let env = {}
+let env = {
+  logger: 'none',
+  db: {
+    dialect: 'sqlite',
+    storage: ':memory:',
+    logging: false
+  },
+  secret: 'secret'
+}
 
 export default env
 
 switch (process.env.NODE_ENV) {
   case 'production':
-    Object.assign(env, production)
+    merge(env, production)
     break
   case 'staging':
-    Object.assign(env, staging)
+    merge(env, staging)
     break
   case 'testing':
-    Object.assign(env, testing)
+    merge(env, testing)
     break
   case 'development':
   default:
-    Object.assign(env, development)
+    merge(env, development)
     break
 }

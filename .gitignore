@@ -2,3 +2,4 @@ node_modules
 
 .envrc*
 swagger.json
+db.sqlite

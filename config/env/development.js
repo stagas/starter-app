@@ -1,6 +1,7 @@
+import path from 'path'
+
 export default {
   db: {
-    dialect: 'sqlite'
-  },
-  secret: 'secret'
+    storage: path.join(__dirname, '..', '..', 'db.sqlite')
+  }
 }
